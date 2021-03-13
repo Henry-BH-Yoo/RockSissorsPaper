@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Rock Scissors Paper</string>
+
+    <string name="img_computer_title">Computer</string>
+    <string name="img_computer_desc">Result Image of Computer</string>
+    <string name="img_mine_title">You</string>
+    <string name="img_mine_desc">Result Image of Mine</string>
+    <string name="choose_one">Choose rock, paper or scissors.</string>
+
+    <string name="txt_rock">ROCK</string>
+    <string name="txt_paper">PAPER</string>
+    <string name="txt_scissors">SCISSORS</string>
+
+    <string name="txt_result_tie">It\'s a tie!</string>
+    <string name="txt_result_win">You win!</string>
+    <string name="txt_result_lose">The computer wins!</string>
+
+    <string name="menu_settings">Settings</string>
+    <string name="menu_statistics">Statistics</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="game_play_header">Game play</string>
+    <string name="appearance_header">Appearance</string>
+
+
+    <!-- Setting Preferences -->
+    <string name="game_play_title">Save game on close</string>
+    <string name="appearance_title">Dark theme</string>
+
+
+    <!-- Statistic string -->
+    <string name="stats_header">Statistics</string>
+    <string name="stat_last_minute">Record in last minute (W-L-T)</string>
+    <string name="stat_all_records">All-time record (W-L-T)</string>
+    <string name="stat_reset">Reset statistics</string>
+    <string name="stat_reset_btn">RESET</string>
+
+</resources>
