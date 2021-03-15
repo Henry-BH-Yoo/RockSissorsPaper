@@ -27,13 +27,13 @@ public class RSPApplication extends Application {
 
         /**
          *  id  int
-         *  gameResultValue (Win: 1 / Tie : 2 / Loss : 3)   int
-         *  gameResultTime ( epoch time)    text
+         *  gameResultValue (Win: 1 / Loss : 2 / Tie : 3)   int
+         *  gameResultTime (YYYY-MM-DD HH:mm:ss)    text
          *
          *  id  resultValue resultTime
-         *  1   2           2021-03-13 16:22:00.000
-         *  2   2           2021-03-13 16:22:10.000
-         *  3   3           2021-03-13 16:22:20.000
+         *  1   2           2021-03-13 16:22:00
+         *  2   2           2021-03-13 16:22:10
+         *  3   3           2021-03-13 16:22:20
          *
          *  SELECT COUNT(a
          *
@@ -56,6 +56,11 @@ public class RSPApplication extends Application {
         super.onCreate();
     }
 
+    /**
+     * Store the result
+     * @param gameResultValue / result vlaue (Win: 1 / Loss : 2 / Tie : 3)
+     * @return
+     */
     public boolean addResult(int gameResultValue) {
         SQLiteDatabase db = helper.getWritableDatabase();
         boolean returnValue = false;
@@ -87,6 +92,10 @@ public class RSPApplication extends Application {
     }
 
 
+    /**
+     * get statistic during last 1 minute
+     * @return
+     */
     public String getStatisticsPastMinute() {
         String returnText = "";
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -136,6 +145,10 @@ public class RSPApplication extends Application {
     }
 
 
+    /**
+     * get Statistics all data
+     * @return
+     */
     public String getStatisticsAllTime() {
         String returnText = "";
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -184,6 +197,10 @@ public class RSPApplication extends Application {
         return returnText;
     }
 
+    /**
+     * delete table
+     * @return
+     */
     public boolean resetTable() {
         SQLiteDatabase db = helper.getWritableDatabase();
         boolean returnValue = false;

@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * For Statistics Activity
+ */
 public class StatsActivity extends AppCompatActivity {
 
     private boolean isDarkAppTheme;
@@ -22,6 +25,10 @@ public class StatsActivity extends AppCompatActivity {
     Button btnReset;
 
 
+    /**
+     * create statistics activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -52,6 +59,9 @@ public class StatsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * get Data from database
+     */
     public void getData() {
         // Get LastMinuteValue
         String lastMinValue = ((RSPApplication) getApplication()).getStatisticsPastMinute();
@@ -63,6 +73,9 @@ public class StatsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * set application theme
+     */
     private void setAppTheme() {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
 
@@ -73,6 +86,11 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * when the click the option items
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean rtnValue = true;

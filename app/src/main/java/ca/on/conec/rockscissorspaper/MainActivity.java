@@ -1,10 +1,3 @@
-/**
- * FileName : MainActivity.java
- * Purpose
- * Revision History :
- *      2021.01.30 Create Project and implement enum and funtions
- *      2021.02.11 Modify specific style.
- */
 package ca.on.conec.rockscissorspaper;
 
 import androidx.annotation.NonNull;
@@ -17,10 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,13 +21,16 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.google.android.material.snackbar.Snackbar;
-
-
+/**
+ * FileName : MainActivity.java
+ * Purpose
+ * Revision History :
+ *      2021.01.30 Create Project and implement enum and funtions
+ *      2021.02.11 Modify specific style.
+ */
 public class MainActivity extends AppCompatActivity {
 
     // Initial Button
@@ -50,15 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean creatingActivity = false;
     private boolean saveState;
     private boolean isDarkAppTheme;
-    private boolean setDone;
 
     private SharedPreferences sharedPref;
 
-    private AppCompatActivity SELF = null;
+//    private AppCompatActivity SELF = null;
 
     private final static int ANIMATION_DURATION = 1000;
     private final static int TIMER_DURATION = 3000;
-    private final static int SERVICE_TIMER_DURATION = 10000;
+//    private final static int SERVICE_TIMER_DURATION = 10000;
     private Timer clickTimer = null;
     /**
      * RockScissorPaper Enum
@@ -67,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         ROCK(0), SCISSOR(1), PAPER(2);
 
         private int value;
-        private RockScissorPaper(int value) {
+        RockScissorPaper(int value) {
             this.value = value;
         }
 
@@ -83,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SELF = this;
+//        SELF = this;
 
         creatingActivity = true;
 
@@ -124,16 +117,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  setTheme using sharedPref
+     */
     private void setAppTheme() {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
 
+        Log.i("DEBUG" , isDarkAppTheme + "");
         if(isDarkAppTheme) {
+            Log.i("DEBUG" , "DarkAppTheme");
             setTheme(R.style.RockScissorsPaperDark);
         } else {
+            Log.i("DEBUG" , "BasicAppTheme");
             setTheme(R.style.RockScissorsPaper);
         }
     }
 
+    /**
+     * Click Event Listener
+     */
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
             clickedBtnId = v.getId();
             makeResultForMine(clickedBtnId);
 
+            // Animation
             imgMine.setAlpha(0f);
             imgMine.animate().alpha(1f).setDuration(ANIMATION_DURATION).setListener(
                 new AnimatorListenerAdapter() {
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         if(usrResult == comResult) {
                             // TIE
                             txtResult.setText(R.string.txt_result_tie);
-                            ((RSPApplication) getApplication()).addResult(2);
+                            ((RSPApplication) getApplication()).addResult(3);
 
                         } else if((usrResult == RockScissorPaper.ROCK && comResult == RockScissorPaper.SCISSOR) ||
                                 (usrResult == RockScissorPaper.SCISSOR && comResult == RockScissorPaper.PAPER) ||
@@ -170,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             // LOSE
                             txtResult.setText(R.string.txt_result_lose);
-                            ((RSPApplication) getApplication()).addResult(3);
+                            ((RSPApplication) getApplication()).addResult(2);
                         }
 
                     }
@@ -304,12 +307,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Menu Option
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.rock_scissors_paper_menu , menu);
         return true;
     }
 
+    /**
+     * When click the option menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -327,6 +340,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * When onStop
+     */
     @Override
     protected void onStop() {
         startService(new Intent(getApplicationContext(), NotificationService.class));

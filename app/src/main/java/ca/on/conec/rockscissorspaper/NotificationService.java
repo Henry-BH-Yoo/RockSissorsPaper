@@ -11,6 +11,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Notification Service
+ */
 public class NotificationService extends Service {
     private Timer timer = null;
     private NotificationManager notificationManager;

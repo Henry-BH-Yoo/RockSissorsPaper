@@ -18,14 +18,14 @@
         <activity
             android:name=".StatsActivity"
             android:label="@string/stats_header"
-            android:theme="@style/RockScissorsPaper" />
+            />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/RockScissorsPaper" />
+            />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/RockScissorsPaper">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

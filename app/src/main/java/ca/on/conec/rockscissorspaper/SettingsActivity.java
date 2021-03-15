@@ -18,6 +18,10 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
 
+    /**
+     * create setting activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,6 +44,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * App theme setting
+     */
     private void setAppTheme() {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
 
@@ -50,6 +57,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * When the click the back button
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean rtnValue = true;
@@ -68,7 +80,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * defualt setting fragment
+     */
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
