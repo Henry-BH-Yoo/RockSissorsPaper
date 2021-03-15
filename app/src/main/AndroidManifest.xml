@@ -10,14 +10,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashScreenTheme">
-        <activity android:name=".StatsActivity"
+        <service
+            android:name=".NotificationService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".StatsActivity"
             android:label="@string/stats_header"
-            android:theme="@style/RockScissorsPaper"
-            ></activity>
+            android:theme="@style/RockScissorsPaper" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/RockScissorsPaper"></activity>
+            android:theme="@style/RockScissorsPaper" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/RockScissorsPaper">

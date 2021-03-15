@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,16 +20,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,15 +44,22 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgMine, imgComputer;
     private TextView txtResult;
     RockScissorPaper usrResult , comResult = null;
-    int clickedBtnId , computerResultId;
+    int clickedBtnId = -1 , computerResultId = -1;
 
 
     private boolean creatingActivity = false;
     private boolean saveState;
     private boolean isDarkAppTheme;
+    private boolean setDone;
 
     private SharedPreferences sharedPref;
 
+    private AppCompatActivity SELF = null;
+
+    private final static int ANIMATION_DURATION = 1000;
+    private final static int TIMER_DURATION = 3000;
+    private final static int SERVICE_TIMER_DURATION = 10000;
+    private Timer clickTimer = null;
     /**
      * RockScissorPaper Enum
      */
@@ -69,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SELF = this;
 
         creatingActivity = true;
 
@@ -80,20 +95,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setBtnAssign();
-    }
-
-    private void setAppTheme() {
-        isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
-
-        if(isDarkAppTheme) {
-            setTheme(R.style.RockScissorsPaperDark);
-        } else {
-            setTheme(R.style.RockScissorsPaper);
-        }
-    }
-
-    private void setBtnAssign() {
         // Button ID Link
         btnRock = findViewById(R.id.btnRock);
         btnScissor = findViewById(R.id.btnScissors);
@@ -109,34 +110,98 @@ public class MainActivity extends AppCompatActivity {
         btnRock.setOnClickListener(buttonListener);
         btnScissor.setOnClickListener(buttonListener);
         btnPaper.setOnClickListener(buttonListener);
+
+        /*
+        Timer serviceTimer = new Timer(true);
+
+        serviceTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startService(new Intent(getApplicationContext(), NotificationService.class));
+            }
+        } , SERVICE_TIMER_DURATION);
+        */
+
     }
 
+    private void setAppTheme() {
+        isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
+
+        if(isDarkAppTheme) {
+            setTheme(R.style.RockScissorsPaperDark);
+        } else {
+            setTheme(R.style.RockScissorsPaper);
+        }
+    }
 
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            imgMine.setVisibility(View.INVISIBLE);
+            imgComputer.setVisibility(View.INVISIBLE);
+
             clickedBtnId = v.getId();
             makeResultForMine(clickedBtnId);
 
-            computerResultId = RockScissorPaper.getRandomValue();
-            makeResultForComputer(computerResultId);
+            imgMine.setAlpha(0f);
+            imgMine.animate().alpha(1f).setDuration(ANIMATION_DURATION).setListener(
+                new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
 
-            if(usrResult == comResult) {
-                // TIE
-                txtResult.setText(R.string.txt_result_tie);
-                ((RSPApplication) getApplication()).addResult(2);
+                        computerResultId = RockScissorPaper.getRandomValue();
+                        makeResultForComputer(computerResultId);
 
-            } else if((usrResult == RockScissorPaper.ROCK && comResult == RockScissorPaper.SCISSOR) ||
-                    (usrResult == RockScissorPaper.SCISSOR && comResult == RockScissorPaper.PAPER) ||
-                    (usrResult == RockScissorPaper.PAPER && comResult == RockScissorPaper.ROCK))  {
-                // WIN
-                txtResult.setText(R.string.txt_result_win);
-                ((RSPApplication) getApplication()).addResult(1);
-            } else {
-                // LOSE
-                txtResult.setText(R.string.txt_result_lose);
-                ((RSPApplication) getApplication()).addResult(3);
+                        imgComputer.setAlpha(0f);
+                        imgComputer.animate().alpha(1f).setDuration(ANIMATION_DURATION);
+
+                        if(usrResult == comResult) {
+                            // TIE
+                            txtResult.setText(R.string.txt_result_tie);
+                            ((RSPApplication) getApplication()).addResult(2);
+
+                        } else if((usrResult == RockScissorPaper.ROCK && comResult == RockScissorPaper.SCISSOR) ||
+                                (usrResult == RockScissorPaper.SCISSOR && comResult == RockScissorPaper.PAPER) ||
+                                (usrResult == RockScissorPaper.PAPER && comResult == RockScissorPaper.ROCK))  {
+                            // WIN
+                            txtResult.setText(R.string.txt_result_win);
+                            ((RSPApplication) getApplication()).addResult(1);
+                        } else {
+                            // LOSE
+                            txtResult.setText(R.string.txt_result_lose);
+                            ((RSPApplication) getApplication()).addResult(3);
+                        }
+
+                    }
+                }
+            );
+
+            ///// If user has not started a new game 3 second
+
+            if(clickTimer != null) {
+                clickTimer.cancel();
             }
+
+            clickTimer = new Timer(true);
+
+            clickTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    clickTimer.cancel();
+                    clickTimer = null;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), R.string.encourage_message , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            }, TIMER_DURATION);
+
+
          }
     };
 
@@ -165,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
             if (imgMine.getVisibility() == View.INVISIBLE) {
                 imgMine.setVisibility(View.VISIBLE);
             }
+
+        } else {
+            imgMine.setImageResource(0);
         }
     }
 
@@ -192,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
             if (imgComputer.getVisibility() == View.INVISIBLE) {
                 imgComputer.setVisibility(View.VISIBLE);
             }
+        } else {
+            imgComputer.setImageResource(0);
         }
     }
 
@@ -207,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("computerResultId", computerResultId);
         editor.commit();
 
-
         super.onPause();
     }
 
@@ -217,19 +286,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        setAppTheme();
         super.onResume();
-
-        setContentView(R.layout.activity_main);
-        setBtnAssign();
-
-        creatingActivity = false;
 
         saveState = sharedPref.getBoolean("saveOnClose", false);
 
-        makeResultForMine(sharedPref.getInt("clickedBtnId" , -1));
-        makeResultForComputer(sharedPref.getInt("computerResultId" , -1));
-        txtResult.setText(sharedPref.getString("resultTxt" , "Choose rock, paper or scissors."));
+        if(saveState || !creatingActivity) {
+            if(sharedPref.contains("clickedBtnId")) {
+                makeResultForMine(sharedPref.getInt("clickedBtnId", -1));
+            }
+            if(sharedPref.contains("computerResultId")) {
+                makeResultForComputer(sharedPref.getInt("computerResultId", -1));
+            }
+            txtResult.setText(sharedPref.getString("resultTxt", "Choose rock, paper or scissors."));
+        }
+
+        creatingActivity = false;
+
     }
 
     @Override
@@ -253,5 +325,11 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    @Override
+    protected void onStop() {
+        startService(new Intent(getApplicationContext(), NotificationService.class));
+        super.onStop();
     }
 }

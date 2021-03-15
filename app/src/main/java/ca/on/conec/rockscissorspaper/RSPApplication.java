@@ -113,7 +113,6 @@ public class RSPApplication extends Application {
             if(cursor != null) {
                 if(cursor.moveToFirst()) {
                     do {
-                        Log.i("INFO >>>>>" , cursor.getInt(1)  + " , " +  cursor.getInt(2) );
                         returnText += cursor.getInt(cursor.getColumnIndex("count")) + "-";
                     } while(cursor.moveToNext());
                 }

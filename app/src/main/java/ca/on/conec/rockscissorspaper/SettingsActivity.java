@@ -1,5 +1,6 @@
 package ca.on.conec.rockscissorspaper;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -55,6 +56,8 @@ public class SettingsActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
             default :
                 rtnValue =  super.onOptionsItemSelected(item);

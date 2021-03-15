@@ -36,4 +36,9 @@
     <string name="stat_reset">Reset statistics</string>
     <string name="stat_reset_btn">RESET</string>
 
+    <!-- Encourage message -->
+    <string name="encourage_title"> The game is waiting for you</string>
+    <string name="encourage_message"> Keep on playing!You know you want to!</string>
+
+
 </resources>

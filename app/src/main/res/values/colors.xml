@@ -10,6 +10,6 @@
     <color name="color_rock">#800000</color>
     <color name="color_paper">#000080</color>
     <color name="color_scissors">#008000</color>
-
+    <color name="lightGrey">#efefef</color>
 
 </resources>
