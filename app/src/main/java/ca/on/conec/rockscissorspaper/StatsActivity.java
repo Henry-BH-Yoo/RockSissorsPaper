@@ -8,12 +8,19 @@ import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class StatsActivity extends AppCompatActivity {
 
     private boolean isDarkAppTheme;
 
     private SharedPreferences sharedPref;
+
+    TextView txtLastMinuteValue , txtAllRecordValue;
+    Button btnReset;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +36,32 @@ public class StatsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        txtLastMinuteValue = findViewById(R.id.txtLastMinuteValue);
+        txtAllRecordValue = findViewById(R.id.txtAllRecordValue);
+        btnReset = findViewById(R.id.btnReset);
+
+        getData();
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((RSPApplication) getApplication()).resetTable();
+                getData();
+            }
+        });
     }
+
+    public void getData() {
+        // Get LastMinuteValue
+        String lastMinValue = ((RSPApplication) getApplication()).getStatisticsPastMinute();
+        txtLastMinuteValue.setText(lastMinValue);
+
+        // Get All Record Result
+        String allRecordValue = ((RSPApplication) getApplication()).getStatisticsAllTime();
+        txtAllRecordValue.setText(allRecordValue);
+    }
+
 
     private void setAppTheme() {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);

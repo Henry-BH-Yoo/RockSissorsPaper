@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
 
         if(isDarkAppTheme) {
-            Log.i("INFO" , "DARK");
             setTheme(R.style.RockScissorsPaperDark);
         } else {
             setTheme(R.style.RockScissorsPaper);
@@ -125,14 +124,18 @@ public class MainActivity extends AppCompatActivity {
             if(usrResult == comResult) {
                 // TIE
                 txtResult.setText(R.string.txt_result_tie);
+                ((RSPApplication) getApplication()).addResult(2);
+
             } else if((usrResult == RockScissorPaper.ROCK && comResult == RockScissorPaper.SCISSOR) ||
                     (usrResult == RockScissorPaper.SCISSOR && comResult == RockScissorPaper.PAPER) ||
                     (usrResult == RockScissorPaper.PAPER && comResult == RockScissorPaper.ROCK))  {
                 // WIN
                 txtResult.setText(R.string.txt_result_win);
+                ((RSPApplication) getApplication()).addResult(1);
             } else {
                 // LOSE
                 txtResult.setText(R.string.txt_result_lose);
+                ((RSPApplication) getApplication()).addResult(3);
             }
          }
     };
@@ -216,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
 
         setAppTheme();
         super.onResume();
-
 
         setContentView(R.layout.activity_main);
         setBtnAssign();
