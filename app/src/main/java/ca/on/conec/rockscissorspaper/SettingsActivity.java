@@ -3,6 +3,7 @@ package ca.on.conec.rockscissorspaper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -67,9 +68,13 @@ public class SettingsActivity extends AppCompatActivity {
         boolean rtnValue = true;
         switch(item.getItemId()) {
             case android.R.id.home:
+                Log.i("INFO" , "click the back button");
+
                 super.onBackPressed();
                 finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                Log.i("INFO" , "Finish");
                 break;
             default :
                 rtnValue =  super.onOptionsItemSelected(item);

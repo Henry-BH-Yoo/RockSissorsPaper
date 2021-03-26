@@ -7,7 +7,10 @@ import androidx.preference.PreferenceManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 //        SELF = this;
 
+        Log.i("INFO" , "onCreate");
+
         creatingActivity = true;
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
@@ -123,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
     private void setAppTheme() {
         isDarkAppTheme = sharedPref.getBoolean("darkAppTheme", false);
 
-        Log.i("DEBUG" , isDarkAppTheme + "");
+        Log.i("INFO" , isDarkAppTheme + "");
         if(isDarkAppTheme) {
-            Log.i("DEBUG" , "DarkAppTheme");
+            Log.i("INFO" , "DarkAppTheme");
             setTheme(R.style.RockScissorsPaperDark);
         } else {
-            Log.i("DEBUG" , "BasicAppTheme");
+            Log.i("INFO" , "BasicAppTheme");
             setTheme(R.style.RockScissorsPaper);
         }
     }
@@ -139,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            // When displaying result, prevent clicking a button
+
+            btnRock.setEnabled(false);
+            btnScissor.setEnabled(false);
+            btnPaper.setEnabled(false);
 
             imgMine.setVisibility(View.INVISIBLE);
             imgComputer.setVisibility(View.INVISIBLE);
@@ -175,6 +186,17 @@ public class MainActivity extends AppCompatActivity {
                             txtResult.setText(R.string.txt_result_lose);
                             ((RSPApplication) getApplication()).addResult(2);
                         }
+
+
+                        // After display result, enable to click the button
+                        new Handler(Looper.getMainLooper()).postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    btnRock.setEnabled(true);
+                                    btnScissor.setEnabled(true);
+                                    btnPaper.setEnabled(true);
+                                }
+                            }, 1000);
 
                     }
                 }
@@ -289,6 +311,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
+        Log.i("INFO" , "onResume");
+
         super.onResume();
 
         saveState = sharedPref.getBoolean("saveOnClose", false);
@@ -345,7 +369,12 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
+
+        Log.d("INFO" , "onStop");
+
         startService(new Intent(getApplicationContext(), NotificationService.class));
+
+
         super.onStop();
     }
 }
